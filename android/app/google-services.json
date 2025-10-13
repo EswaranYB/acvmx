@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "155953141218",
+    "project_id": "acvmx-app-61557",
+    "storage_bucket": "acvmx-app-61557.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:155953141218:android:90ba375339084ba4fc15bb",
+        "android_client_info": {
+          "package_name": "com.younderbot.acvmx"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCuuroKHnVtXLPBuP_peuknAkkCmhgoynE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

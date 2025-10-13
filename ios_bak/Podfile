@@ -1,0 +1,103 @@
+# Uncomment this line to define a global platform for your project
+platform :ios, '13.0'
+
+# CocoaPods analytics sends network stats synchronously affecting flutter build latency.
+ENV['COCOAPODS_DISABLE_STATS'] = 'true'
+
+project 'Runner', {
+  'Debug' => :debug,
+  'Profile' => :release,
+  'Release' => :release,
+}
+
+def flutter_root
+  generated_xcode_build_settings_path = File.expand_path(File.join('..', 'Flutter', 'Generated.xcconfig'), __FILE__)
+  unless File.exist?(generated_xcode_build_settings_path)
+    raise "#{generated_xcode_build_settings_path} must exist. If you're running pod install manually, make sure flutter pub get is executed first"
+  end
+
+  File.foreach(generated_xcode_build_settings_path) do |line|
+    matches = line.match(/FLUTTER_ROOT\=(.*)/)
+    return matches[1].strip if matches
+  end
+  raise "FLUTTER_ROOT not found in #{generated_xcode_build_settings_path}. Try deleting Generated.xcconfig, then run flutter pub get"
+end
+
+require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelper'), flutter_root)
+
+flutter_ios_podfile_setup
+
+target 'Runner' do
+  use_frameworks!
+
+  # Specify stable gRPC versions
+  pod 'gRPC-Core', '~> 1.62.0'
+  pod 'gRPC-C++', '~> 1.62.0'
+  pod 'FirebaseCoreInternal', :modular_headers => true
+  pod 'FirebaseStorage', '~> 10.25'
+  pod 'GoogleUtilities', :modular_headers => true
+
+  flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+  target 'RunnerTests' do
+    inherit! :search_paths
+  end
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    # Fix aligned allocation issue
+    target.build_configurations.each do |config|
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+#     config.build_settings["EXCLUDED_ARCHS[sdk=iphonesimulator*]"] = "arm64"
+      config.build_settings['SWIFT_SUPPRESS_WARNINGS'] = 'YES'
+      config.build_settings['CLANG_CXX_LANGUAGE_STANDARD'] = 'c++17'
+      config.build_settings['CLANG_CXX_LIBRARY'] = 'libc++'
+      config.build_settings['ONLY_ACTIVE_ARCH'] = 'YES'
+      config.build_settings['CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES'] = 'YES'
+      config.build_settings['GCC_PREPROCESSOR_DEFINITIONS'] ||= [
+        '$(inherited)',
+        'PERMISSION_CAMERA=1',
+        'PERMISSION_PHOTOS=1',
+        'PERMISSION_MICROPHONE=1',
+      ]
+    end
+
+    # Clean up BoringSSL flags
+    if target.name == 'BoringSSL-GRPC'
+      target.source_build_phase.files.each do |file|
+        if file.settings && file.settings['COMPILER_FLAGS']
+          flags = file.settings['COMPILER_FLAGS'].split
+          flags.reject! { |flag| ['-GCC_WARN_INHIBIT_ALL_WARNINGS', '-G'].include?(flag) }
+          file.settings['COMPILER_FLAGS'] = flags.join(' ')
+        end
+      end
+    end
+
+    # 🛠 Patch gRPC-Core to fix Xcode template parsing issue
+    if target.name == 'gRPC-Core'
+      target.build_phases.each do |phase|
+        next unless phase.respond_to?(:files)
+
+        phase.files.each do |file_ref|
+          file = file_ref.file_ref
+          next unless file && file.path && file.path.include?('basic_seq.h')
+
+          path = file.real_path
+          if File.exist?(path)
+            content = File.read(path)
+            if content.include?('Traits::template CallSeqFactory(f_, *cur_, std::move(arg));')
+              fixed = content.gsub(
+                'Traits::template CallSeqFactory(f_, *cur_, std::move(arg));',
+                'Traits::template CallSeqFactory<>(f_, *cur_, std::move(arg));'
+              )
+              File.write(path, fixed)
+              puts "✅ Patched #{path} for Xcode template issue"
+            end
+          end
+        end
+      end
+    end
+
+    flutter_additional_ios_build_settings(target)
+  end
+end

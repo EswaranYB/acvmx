@@ -1,0 +1,59 @@
+import 'package:flutter/material.dart';
+
+import '../../../Newtwork/api_manager.dart';
+import '../../../Newtwork/api_response.dart';
+import '../../../Newtwork/api_service.dart';
+import '../../../core/helper/app_log.dart';
+import '../model/ticket_by_id_response.dart';
+
+class TicketFilterProvider with ChangeNotifier {
+  final BaseApiManager apiManager = BaseApiManager();
+  late final ApiServices _apiServices;
+  TicketFilterProvider() {
+    _apiServices = ApiServices(apiManager: apiManager);
+  }
+  String? _statusFilter;
+  String _sortOrder = 'Most Recent';
+
+  String? get statusFilter => _statusFilter;
+  String get sortOrder => _sortOrder;
+  bool _isLoading = false;
+  TicketByIdResponse? _ticketByIdResponse;
+
+  bool get isLoading => _isLoading;
+  TicketByIdResponse? get ticketByIdResponse => _ticketByIdResponse;
+  void setStatusFilter(String? status) {
+    _statusFilter = status;
+    notifyListeners();
+  }
+
+  void setSortOrder(String order) {
+    _sortOrder = order;
+    notifyListeners();
+  }
+
+  void clearFilters() {
+    _statusFilter = null;
+    _sortOrder = 'Most Recent';
+    notifyListeners();
+  }
+  Future<void> getTicketById(String ticketId) async {
+    try {
+      _isLoading = true;
+
+      ApiResponse response = await _apiServices.(ticketId);
+
+      if (response.status == 200 && response.data != null) {
+        _ticketByIdResponse = TicketByIdResponse.fromJson(response.data!);
+      }
+
+    } catch (error) {
+      AppLog.e("api:$error");
+      _isLoading = false;
+      notifyListeners();
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+}
