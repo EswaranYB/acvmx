@@ -195,12 +195,14 @@ class _ViewTicketScreenState extends State<ViewTicketScreen> {
                               fontWeight: FontWeight.w600,
                             ),
                           ],
-                        ),ticketDetails.updates == null?
+                        ),
+                        ticketDetails.updates!.isEmpty?
                         CustomText(
                           text: "No Attachments",
                           fontSize: AppFontSize.s13,
                           fontWeight: FontWeight.w600,
                         ):
+
                         Card(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
