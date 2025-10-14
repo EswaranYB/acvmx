@@ -202,7 +202,6 @@ class _ViewTicketScreenState extends State<ViewTicketScreen> {
                           fontSize: AppFontSize.s13,
                           fontWeight: FontWeight.w600,
                         ):
-
                         Card(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
