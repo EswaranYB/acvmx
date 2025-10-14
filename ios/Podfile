@@ -114,10 +114,10 @@ if target.name == 'gRPC-Core'
           FileUtils.chmod("u+w", path) # ⛔ This tries to make it writable
 
           content = File.read(path)
-          if content.include?('Traits::template CallSeqFactory(f_, *cur_, std::move(arg));')
+          if content.include?('Traits::template CallSeqFactory(f_, *cur_, std::move(arg))')
             fixed = content.gsub(
-              'Traits::template CallSeqFactory(f_, *cur_, std::move(arg));',
-              'Traits::template CallSeqFactory<>(f_, *cur_, std::move(arg));'
+              'Traits::template CallSeqFactory(f_, *cur_, std::move(arg))',
+              'Traits::template CallSeqFactory<>(f_, *cur_, std::move(arg))'
             )
             File.write(path, fixed)
             puts "✅ Patched #{path} for Xcode template issue"
