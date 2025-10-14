@@ -420,7 +420,7 @@ class ProductDetailProvider with ChangeNotifier {
       _productDetailsBySerialNumberResponse = null;
       AppLog.e("Unknown Exception: $e");
       if (context.mounted) {
-        showSnackBar(context, 'An unexpected error occurred.');
+        showSnackBar(context, 'Invalid code');
       }
     } finally {
       _isLoading = false;
