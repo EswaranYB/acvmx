@@ -404,11 +404,26 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                                 child: Row(
                                   spacing: 17,
                                   children: [
-                                    Expanded(flex: 3, child: CustomText(text:"Item Name", fontWeight:AppFontWeight.w500,fontSize: AppFontSize.s10)),
-                                    Expanded(flex: 2, child: CustomText(text:"Quantity", fontWeight:AppFontWeight.w500,fontSize: AppFontSize.s10)),
-                                    Expanded(flex: 2, child: CustomText(text:"Measure", fontWeight:AppFontWeight.w500,fontSize: AppFontSize.s10)),
-                                    Expanded(flex: 2, child: CustomText(text:"Used Qty", fontWeight:AppFontWeight.w500,fontSize: AppFontSize.s10)),
-                                    Expanded(flex: 2, child: CustomText(text:"Action", fontWeight:AppFontWeight.w500,fontSize: AppFontSize.s10)),
+                                    Expanded(flex: 2, child: CustomText(
+                                      maxLines: 2,
+                                        softWrap: false,
+                                        text:"Item Name", fontWeight:AppFontWeight.w500,fontSize: AppFontSize.s10)),
+                                    Expanded(flex: 3, child: CustomText(
+                                        maxLines: 1,
+                                        softWrap: false,
+                                        text:"Quantity", fontWeight:AppFontWeight.w500,fontSize: AppFontSize.s10)),
+                                    Expanded(flex: 3, child: CustomText(
+                                      maxLines: 1,
+                                      softWrap: false,
+                                        text:"Measure", fontWeight:AppFontWeight.w500,fontSize: AppFontSize.s10)),
+                                    Expanded(flex: 2, child: CustomText(
+                                        maxLines: 2,
+                                        softWrap: false,
+                                        text:"Used Qty", fontWeight:AppFontWeight.w500,fontSize: AppFontSize.s10)),
+                                    Expanded(flex: 3, child: CustomText(
+                                      maxLines: 1,
+                                        softWrap: false,
+                                        text:"Action", fontWeight:AppFontWeight.w500,fontSize: AppFontSize.s10)),
                                   ],
                                 ),
                               ),

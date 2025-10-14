@@ -110,7 +110,7 @@ class ProductDetails extends StatelessWidget {
                         10.height,
                         KeyValueTextRow(label: 'Company name', value: product?.companyName),
                         10.height,
-                        KeyValueTextRow(label: 'Service Location', value: product?.serviceLocation),
+                        KeyValueTextRow(label: 'Location Type', value: product?.serviceLocation),
                         10.height,
                         KeyValueTextRow(label: 'Location', value: product?.location),
                         10.height,
@@ -138,7 +138,7 @@ class ProductDetails extends StatelessWidget {
                   onTap: () {
                     context.pushNamed(
                         RouteName.customerRecordingScreen,
-                        extra: product?.serviceLocation
+                        extra: product?.location
                     );
                   },
                   child: Container(
