@@ -402,9 +402,9 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Row(
-                                  spacing: 17,
+                                  spacing: 15,
                                   children: [
-                                    Expanded(flex: 2, child: CustomText(
+                                    Expanded(flex: 3, child: CustomText(
                                       maxLines: 2,
                                         softWrap: false,
                                         text:"Item Name", fontWeight:AppFontWeight.w500,fontSize: AppFontSize.s10)),
@@ -420,7 +420,7 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                                         maxLines: 2,
                                         softWrap: false,
                                         text:"Used Qty", fontWeight:AppFontWeight.w500,fontSize: AppFontSize.s10)),
-                                    Expanded(flex: 3, child: CustomText(
+                                    Expanded(flex: 2, child: CustomText(
                                       maxLines: 1,
                                         softWrap: false,
                                         text:"Action", fontWeight:AppFontWeight.w500,fontSize: AppFontSize.s10)),
@@ -449,13 +449,18 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                                             flex: 3,
                                             child: DropdownButtonFormField<StockInventoryModel>(
                                               value: row['stock'],
-                                              hint: const Text("Select Item", style: TextStyle(fontSize: 9)),
+                                              hint: const Text(
+                                                maxLines: 1,
+                                                  softWrap: false,
+                                                  "Select Item", style: TextStyle(fontSize: 9)),
                                               isExpanded: true,
                                               items: stocks
                                                   .where((s) => !controller.tableRows.any((r) => r['stock']?.itemName == s.itemName && r != row))
                                                   .map((stock) => DropdownMenuItem(
                                                 value: stock,
-                                                child: CustomText(text:stock.itemName ?? "",fontSize: AppFontSize.s8,),
+                                                child: CustomText(
+                                                  maxLines: 1,
+                                                  text:stock.itemName ?? "",fontSize: AppFontSize.s8,),
                                               ))
                                                   .toList(),
                                               onChanged: (val) {
@@ -475,7 +480,7 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                                           // Available Quantity
                                           Expanded(
                                             flex: 2,
-                                            child: Text(row['stock'] != null ? "${row['stock']!.availableStock}" : "-"),
+                                            child: CustomText(text:row['stock'] != null ? "${row['stock']!.availableStock}" : "-"),
                                           ),
 
 
@@ -483,7 +488,10 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                                           // Measure
                                           Expanded(
                                             flex: 2,
-                                            child: CustomText(text:row['stock'] != null ? row['stock']!.measureName ?? "-" : "-"),
+                                            child: CustomText(
+                                              maxLines: 1,
+                                                softWrap: false,
+                                                text:row['stock'] != null ? row['stock']!.measureName ?? "-" : "-"),
                                           ),
 
 
