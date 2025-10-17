@@ -690,7 +690,6 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                             children: [
                               InkWell(
                                 onTap: () {
-                                  print('tesitng video ${ticketDetails.updates!.last.video!}');
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
