@@ -40,6 +40,7 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
 
   bool isCompleted = false;
   bool isResolved = false;
+  bool isLocationLoading = false;
   @override
   void initState() {
     super.initState();
@@ -270,31 +271,57 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                                         ),
                                       ),
                                       InkWell(
-                                        onTap: ()async{
-                                          final userLocation = await controller.fetchLocation();
-                                          print("=====================location$userLocation");
-                                          print("===============================$ticketDetails" );
-                                          print(ticketDetails.ticket!.locationLongitude  );
-                                          if(ticketDetails.userDetails?.lotitude!=null && ticketDetails.userDetails?.langitude != null){
-                                            context.pushNamed(
-                                              RouteName.customerLocationView,
-                                              extra: {
-                                                'customerLong':double.parse(ticketDetails.userDetails!.lotitude.toString()),
-                                                'customerLat':double.parse(ticketDetails.userDetails!.langitude.toString()),
-                                                "employLong":userLocation.longitude,
-                                                "employLat":userLocation.latitude
-                                              },
-                                            );
-                                          }else{
-                                            showSnackBar(context, "Location No Assign");
+                                        onTap: () async {
+                                          setState(() {
+                                            isLocationLoading = true;
+                                          });
+
+                                          try {
+                                            final userLocation = await controller.fetchLocation();
+                                            print("=====================location $userLocation");
+                                            print("=====================ticketDetails $ticketDetails");
+                                            print(ticketDetails.ticket!.locationLongitude);
+
+                                            if (ticketDetails.userDetails?.lotitude != null &&
+                                                ticketDetails.userDetails?.langitude != null) {
+                                              context.pushNamed(
+                                                RouteName.customerLocationView,
+                                                extra: {
+                                                  'customerLong':
+                                                  double.parse(ticketDetails.userDetails!.lotitude.toString()),
+                                                  'customerLat':
+                                                  double.parse(ticketDetails.userDetails!.langitude.toString()),
+                                                  'employLong': userLocation.longitude,
+                                                  'employLat': userLocation.latitude,
+                                                },
+                                              );
+                                            } else {
+                                              showSnackBar(context, "Customer location not assigned.");
+                                            }
+                                          } catch (e) {
+                                            showSnackBar(context, 'Please turn on your location service.');
+                                          } finally {
+                                            setState(() {
+                                              isLocationLoading = false;
+                                            });
                                           }
                                         },
-                                        child: Icon(
+                                        child: isLocationLoading
+                                            ? SizedBox(
+                                          width: 20,
+                                          height: 20,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            color: AppColor.primaryColor,
+                                          ),
+                                        )
+                                            : Icon(
                                           Icons.location_on,
                                           color: AppColor.primaryColor,
                                           size: 25,
                                         ),
                                       )
+
                                     ],
                                   ),
                                   10.height,
