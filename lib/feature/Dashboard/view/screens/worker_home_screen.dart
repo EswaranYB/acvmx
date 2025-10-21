@@ -373,40 +373,45 @@ String? userId;
                                       child: child,
                                     ),
                                   ),
-                                  child: Container(
-                                    constraints: const BoxConstraints(
-                                      minHeight: 125,
-                                      minWidth: 125,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: provider.jobList[index].color,
-                                      borderRadius: BorderRadius.circular(10),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withValues(alpha: 0.1),
-                                          blurRadius: 10,
-                                          offset: const Offset(0, 4),
-                                        ),
-                                      ],
-                                    ),
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        SvgPicture.asset(provider.jobList[index].icon),
-                                        CustomText(
-                                          text: provider.jobList[index].number,
-                                          fontSize: AppFontSize.s22,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                        Text(
-                                          provider.jobList[index].title,
-                                          style: TextStyle(
-                                            fontSize: AppFontSize.s14,
-                                            fontWeight: AppFontWeight.w500,
+                                  child: InkWell(
+                                    onTap: (){
+                                      // print('clicked ${index} ${provider.jobList[index].title}');
+                                    },
+                                    child: Container(
+                                      constraints: const BoxConstraints(
+                                        minHeight: 125,
+                                        minWidth: 125,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: provider.jobList[index].color,
+                                        borderRadius: BorderRadius.circular(10),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withValues(alpha: 0.1),
+                                            blurRadius: 10,
+                                            offset: const Offset(0, 4),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          SvgPicture.asset(provider.jobList[index].icon),
+                                          CustomText(
+                                            text: provider.jobList[index].number,
+                                            fontSize: AppFontSize.s22,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                          Text(
+                                            provider.jobList[index].title,
+                                            style: TextStyle(
+                                              fontSize: AppFontSize.s14,
+                                              fontWeight: AppFontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 );
