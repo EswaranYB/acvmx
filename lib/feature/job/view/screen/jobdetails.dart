@@ -299,7 +299,7 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                                               showSnackBar(context, "Customer location not assigned.");
                                             }
                                           } catch (e) {
-                                            showSnackBar(context, 'Please turn on your location service.');
+                                            showSnackBar(context, 'Location access is required');
                                           } finally {
                                             setState(() {
                                               isLocationLoading = false;
