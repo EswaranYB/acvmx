@@ -1,11 +1,8 @@
-import 'package:acvmx/core/app_assets.dart';
 import 'package:acvmx/core/app_decoration.dart';
 import 'package:acvmx/core/app_colors.dart';
 import 'package:acvmx/core/custom_text.dart';
-import 'package:acvmx/core/responsive.dart';
 import 'package:acvmx/feature/Dashboard/view/widgets/appbar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -55,39 +52,56 @@ class _WorkerScheduledJobsState extends State<WorkerScheduledJobs>
     });
   }
 
-  Future<void> _fetchAndInitializeJobs() async {
-    final ticketController = Provider.of<GetTicketByTechnicianController>(context, listen: false);
-    final statusController = Provider.of<TicketStatusUpdateController>(context, listen: false);
+Future<void> _fetchAndInitializeJobs() async {
+  final ticketController = Provider.of<GetTicketByTechnicianController>(context, listen: false);
+  final statusController = Provider.of<TicketStatusUpdateController>(context, listen: false);
 
-    // Fetch scheduled jobs with your userId and 'past' filter
-    await ticketController.fetchScheduledJobs(context, '6842b74489a8c', 'past');
-
-    // Get the updated list of scheduled jobs after fetch
-    final scheduledJobs = ticketController.scheduledJobs;
-
-    // Initialize jobAcceptStatus with null values for all jobs
-    jobAcceptStatus = List<bool?>.filled(scheduledJobs.length, null);
-
-    for (int i = 0; i < scheduledJobs.length; i++) {
-      final job = scheduledJobs[i];
-      final savedStatus = statusController.getSavedJobStatus(job.uniqueId);
-
-      if (savedStatus != null) {
-        final statusLower = savedStatus.toLowerCase();
-        if (statusLower == "accept") {
-          jobAcceptStatus[i] = true;
-        } else if (statusLower == "reject") {
-          jobAcceptStatus[i] = false;
-        } else {
-          jobAcceptStatus[i] = null; // For scheduled or unknown status
-        }
-      }
-    }
-
-    if (mounted) setState(() {});
+  String type ='';
+  switch (widget.title.replaceAll('\n', ' ').replaceAll(RegExp(r'\s+'),' ').trim()) {
+    case 'Work allocated':
+      type ='today';
+      break;
+    case 'Upcoming jobs':
+      type = 'upcoming';
+      break;
+    case 'Overdue jobs':
+      type = 'past';
+      break;
+    case 'Waiting for submission':
+      type = 'waiting';
+      break;
+    default:
   }
 
+  // Fetch scheduled jobs (past)
+  await ticketController.fetchScheduledJobs(context, '6842b74489a8c', type);
 
+  // ✅ Use parsed data from workerSheduledJobs instead of raw scheduledJobs
+  final scheduledJobs = ticketController.workerSheduledJobs;
+
+  // Initialize jobAcceptStatus with null values for all jobs
+  jobAcceptStatus = List<bool?>.filled(scheduledJobs.length, null);
+
+  for (int i = 0; i < scheduledJobs.length; i++) {
+    final job = scheduledJobs[i];
+    final savedStatus = statusController.getSavedJobStatus(job.uniqueId);
+
+    if (savedStatus != null) {
+      final statusLower = savedStatus.toLowerCase();
+      if (statusLower == "accept") {
+        jobAcceptStatus[i] = true;
+      } else if (statusLower == "reject") {
+        jobAcceptStatus[i] = false;
+      } else {
+        jobAcceptStatus[i] = null;
+      }
+    }
+  }
+
+  if (mounted) setState(() {});
+}
+
+  
   @override
   void dispose() {
     _controller.dispose();
@@ -121,7 +135,8 @@ class _WorkerScheduledJobsState extends State<WorkerScheduledJobs>
                 return const Center(child: CircularProgressIndicator());
               }
 
-              final tickets = provider.workerSheduledJobs;
+            final tickets = provider.workerSheduledJobs;
+
 
               if (tickets.isEmpty) {
                 return Center(
