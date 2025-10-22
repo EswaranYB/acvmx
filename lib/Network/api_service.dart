@@ -39,6 +39,19 @@ class ApiServices {
         headers: headers);
   }
 
+/// Get scheculed jobs by tecnician ID
+  Future<ApiResponse> getScheduledJobsByTechnician(String technicianId, String type) {
+    return apiManager.get(
+      ApiEndPoints.getScheduledJobsByTechnician,
+      queryParameters: {
+        'user_id': technicianId,
+        'type': type,
+      },
+      headers: headers,
+    );
+  }
+
+
   /// Get ticket by user ID
   Future<ApiResponse> getTicketByUserId(String customerId) {
     return apiManager.get(ApiEndPoints.getTicketByUserId,

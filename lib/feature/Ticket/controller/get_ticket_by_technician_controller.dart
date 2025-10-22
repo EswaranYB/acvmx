@@ -96,6 +96,49 @@ class GetTicketByTechnicianController extends ChangeNotifier {
 
   List<TicketByIdResponse> get ticketByTechnician => _filteredTickets;
 
+  final List<TicketByIdResponse> _workerSheduledJobs = [];
+  List<TicketByIdResponse> get workerSheduledJobs => _workerSheduledJobs;
+
+
+  final List<dynamic> _scheduledJobs = [];
+  List<dynamic> get scheduledJobs => _scheduledJobs;
+
+  /// Fetch scheduled jobs by userId and type (today, upcoming, past, waiting)
+  Future<void> fetchScheduledJobs(
+      BuildContext context, String userId, String type) async {
+    try {
+      isLoading = true;
+      notifyListeners();
+
+      final response = await _apiServices.getScheduledJobsByTechnician(
+        userId,
+        type,
+      );
+
+      if (response.status == 200 && response.listData != null) {
+        _scheduledJobs.clear();
+        _scheduledJobs.addAll(response.listData!);
+        AppLog.d("Fetched ${_scheduledJobs.length} scheduled jobs.");
+      } else {
+        AppLog.e("API error: ${response.message}");
+        if (context.mounted) {
+          showSnackBar(
+            context,
+            response.message ?? "Error fetching scheduled jobs.",
+          );
+        }
+      }
+    } catch (e, stackTrace) {
+      AppLog.e("Error fetching scheduled jobs: $e\n$stackTrace");
+      if (context.mounted) {
+        showSnackBar(context, "Something went wrong: ${e.toString()}");
+      }
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
   //ticket count
 
   String _ticketId = '';
