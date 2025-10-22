@@ -375,7 +375,7 @@ String? userId;
                                   ),
                                   child: InkWell(
                                     onTap: (){
-                                      // print('clicked ${index} ${provider.jobList[index].title}');
+                                      print('clicked ${index} ${provider.jobList[index].title}');
                                     },
                                     child: Container(
                                       constraints: const BoxConstraints(
