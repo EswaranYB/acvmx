@@ -104,7 +104,7 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                   context.pop();
 
                 },
-                title: 'Job id ${ticketDetails?.ticket?.jobId ??""}',
+                title: 'Job ID ${ticketDetails?.ticket?.jobId ??""}',
               ),
               body: controller.isLoading
                   ? const Center(child: CircularProgressIndicator())
@@ -236,7 +236,7 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                               alignment: Alignment.centerLeft,
                               child: CustomText(
                                 text:
-                                'Job id ${ticketDetails.ticket?.jobId}',
+                                'Job ID ${ticketDetails.ticket?.jobId}',
                                 fontWeight: AppFontWeight.w700,
                                 fontSize: AppFontSize.s14,
                                 color: AppColor.whiteE5EFFF,

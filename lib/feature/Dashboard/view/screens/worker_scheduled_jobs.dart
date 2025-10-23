@@ -391,7 +391,6 @@ Future<void> _fetchAndInitializeJobs() async {
                               // Service Notes and Technician Remarks labels
                               Row(
                                 children: [
-
                                   CustomText(
                                     text: 'Service Notes',
                                     fontSize: AppFontSize.s14,
