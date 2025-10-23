@@ -249,8 +249,8 @@ class _RaiseTicketScreenState extends State<RaiseTicketScreen> {
                                               value: priorityValue,
                                               child: CustomText(
                                                 text: priorityValue,
-                                                fontSize: AppFontSize.s17,
-                                                fontWeight: AppFontWeight.w600,
+                                                fontSize: AppFontSize.s15,
+                                                // fontWeight: AppFontWeight.w600,
                                                 color: AppColor.blackColor,
                                               ),
                                             );
@@ -267,13 +267,13 @@ class _RaiseTicketScreenState extends State<RaiseTicketScreen> {
                                 ),
                               ],
                             ),
-
+10.height
 
                           ],
                         ),
                       ),
                     ),
-                    40.height,
+                    25.height,
                     if(controller.isLoading)...[
                       Center(
                         child: CustomText(text: "Please wait few seconds and do not go back",),
@@ -303,15 +303,46 @@ class _RaiseTicketScreenState extends State<RaiseTicketScreen> {
                             try {
                               showLoadingDialog(context, message: 'Raising ticket...');
 
+                              // final request = RaiseTicketRequest(
+                              //   id: userId.toString(),
+                              //   productId: productId ?? "PROD_001",
+                              //   problems: title,
+                              //   location: location,
+                              //   comments: serviceNotes,
+                              //   // priority: _priorityNotifier.value,
+                              //   video: File(widget.videoPath),
+                              // );
+String priority ="1";
+switch(_priorityNotifier.value){
+  case 'Urgent':
+    priority="1";
+    break;
+  case 'High':
+    priority="2";
+    break;
+  case 'Low':
+    priority="3";
+    break;
+}
                               final request = RaiseTicketRequest(
                                 id: userId.toString(),
                                 productId: productId ?? "PROD_001",
                                 problems: title,
                                 location: location,
                                 comments: serviceNotes,
-                                priority: _priorityNotifier.value,
                                 video: File(widget.videoPath),
+                                priority_type: priority
+
                               );
+
+                              print('id: ${request.id}');
+                              print('productId: ${request.productId}');
+                              print('problems: ${request.problems}');
+                              print('location: ${request.location}');
+                              print('comments: ${request.comments}');
+                              print('video path: ${request.video}');
+                              print('priority: ${request.priority_type}');
+
 
                               await controller.raiseTicketApiCall(context,request);
                               await cameraProvider.clearCache();
@@ -390,4 +421,3 @@ void showLoadingDialog(BuildContext context, {String message = 'Loading...'}) {
     },
   );
 }
-

@@ -94,7 +94,7 @@ class _CustomerPreviewBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<VideoPreviewNotifier>(
       builder: (context, notifier, _) {
-        print('Video Pathoppppppppppppppppppppppppppp: ${notifier.videoPath}');
+        print('Video preview Path : ${notifier.videoPath}');
         return Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

@@ -9,7 +9,7 @@ class RaiseTicketRequest {
   final String comments;
   final String location;
   final File? video;
-  final String priority;
+  final String priority_type;
 
   RaiseTicketRequest({
     required this.id,
@@ -17,7 +17,7 @@ class RaiseTicketRequest {
     required this.problems,
     required this.comments,
     required this.location,
-    required this.priority,
+    required this.priority_type,
     this.video,
   });
 
@@ -27,7 +27,7 @@ class RaiseTicketRequest {
         "problems": problems,
         "comments": comments,
         "location": location,
-    "priority":priority
+        "priority_type":priority_type
 
         // video is not included here since files can't be directly serialized to JSON
       };
@@ -40,7 +40,7 @@ class RaiseTicketRequest {
       "problems": problems,
       "comments": comments,
       "location": location,
-      "priority":priority,
+      "priority_type":priority_type,
       if (video != null)
         "video": await MultipartFile.fromFile(video!.path,
             filename: video!.path.split('/').last),
