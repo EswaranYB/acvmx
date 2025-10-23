@@ -1,6 +1,7 @@
 import 'package:acvmx/core/app_decoration.dart';
 import 'package:acvmx/core/app_colors.dart';
 import 'package:acvmx/core/custom_text.dart';
+import 'package:acvmx/core/responsive.dart';
 import 'package:acvmx/feature/Dashboard/view/widgets/appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -226,15 +227,12 @@ Future<void> _fetchAndInitializeJobs() async {
                                 ],
                               ),
 
-                              const SizedBox(height: 8),
+                              8.height,
 
                               // Job problem description
-                              Text(
-                                job.problems.toString().toTitleCase(),
-                                style: const TextStyle(fontSize: 16),
-                              ),
+                              f16(text: job.problems.toTitleCase()),
 
-                              const SizedBox(height: 10),
+                              10.height,
 
                               // Status indicator row
                               Row(
@@ -251,172 +249,163 @@ Future<void> _fetchAndInitializeJobs() async {
                                           : AppColor.statusRed,
                                     ),
                                   ),
-                                  const SizedBox(width: 5),
-                                  Text(
-                                    job.ticketStatus,
-                                    style: const TextStyle(fontSize: 14),
-                                  ),
-                                  const SizedBox(width: 5),
-                                  Text(
-                                    DateFormat('MMM dd, yyyy').format(
+                                  5.width,
+                                  f14(text: job.ticketStatus),
+                                  5.width,
+                                  f14(
+                                    text: DateFormat('MMM dd, yyyy').format(
                                       DateTime.parse(job.createdDate),
                                     ),
-                                    style: const TextStyle(fontSize: 14),
                                   ),
-                                  const SizedBox(width: 10),
-                                  Text(
-                                    DateFormat('hh:mm a').format(
+                                  10.width,
+                                  f14(
+                                    text: DateFormat('hh:mm a').format(
                                       DateTime.parse(job.createdDate),
                                     ),
-                                    style: const TextStyle(fontSize: 14),
                                   ),
                                 ],
                               ),
 
                               // Accept/Reject buttons for scheduled jobs
-                              if (job.ticketStatus.toLowerCase() == 'scheduled')
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 8.0),
-                                  child: Row(
-                                    children: [
-                                      // Reject Button
-                                      if (jobAcceptStatus[index] != true) ...[
-                                        GestureDetector(
-                                          onTap: () async {
-                                            setState(() => jobAcceptStatus[index] = false);
-                                            final request = TicketUpdateRequest(
-                                              ticketId: job.ticketId,
-                                              status: "Reject",
-                                              uniqueId: job.uniqueId,
-                                            );
-                                            try {
-                                              await context
-                                                  .read<TicketStatusUpdateController>()
-                                                  .updateTicketStatus(request);
-                                              showSnackBar(context, "Job Rejected Successfully");
-                                            } catch (e) {
-                                              setState(() => jobAcceptStatus[index] = null);
-                                              showSnackBar(context, "Failed to update status");
-                                            }
-                                          },
-                                          child: Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 12, vertical: 6),
-                                            decoration: BoxDecoration(
-                                              color: jobAcceptStatus[index] == false
-                                                  ? Colors.red
-                                                  : Colors.grey[300],
-                                              borderRadius: BorderRadius.circular(12),
-                                            ),
-                                            child: const Text(
-                                              "Reject",
-                                              style: TextStyle(
-                                                  fontSize: 12, color: Colors.black87),
-                                            ),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 8),
-
-                                        // Scheduled Button (resets to null)
-                                        GestureDetector(
-                                          onTap: () {
-                                            setState(() => jobAcceptStatus[index] = null);
-                                          },
-                                          child: Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 12, vertical: 6),
-                                            decoration: BoxDecoration(
-                                              color: jobAcceptStatus[index] == null
-                                                  ? Colors.blue
-                                                  : Colors.grey[300],
-                                              borderRadius: BorderRadius.circular(12),
-                                            ),
-                                            child: const Text(
-                                              "Scheduled",
-                                              style: TextStyle(
-                                                  fontSize: 12, color: Colors.black87),
+                              Row(
+                                children: [
+                                  CustomText(
+                                    text: job.ticketStatus,
+                                    fontSize: AppFontSize.s14,
+                                    color: AppColor.customerStatus,
+                                  ),
+                                  Spacer(),
+                                  if (job.ticketStatus.toLowerCase() == 'scheduled')
+                                    Row(
+                                      spacing: 8,
+                                      children: [
+                                        if (jobAcceptStatus[index] != true) ...[
+                                          // Reject button
+                                          GestureDetector(
+                                            onTap: () async {
+                                              setState(() => jobAcceptStatus[index] = false);
+                                              final request = TicketUpdateRequest(
+                                                ticketId: job.ticketId,
+                                                status: "Reject", uniqueId:job.uniqueId,
+                                              );
+                                              try {
+                                                await context
+                                                    .read<TicketStatusUpdateController>()
+                                                    .updateTicketStatus(request);
+                                                showSnackBar(context, "Job Rejected Successfully");
+                                              } catch (e) {
+                                                setState(() => jobAcceptStatus[index] = null);
+                                                showSnackBar(context, "Failed to update status");
+                                              }
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(horizontal: 1, vertical: 4),
+                                              decoration: BoxDecoration(
+                                                color: jobAcceptStatus[index] == false
+                                                    ? Colors.red
+                                                    : Colors.grey[300],
+                                                borderRadius: BorderRadius.circular(12),
+                                              ),
+                                              child: Padding(
+                                                padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                                                child: CustomText(
+                                                  text: "Reject",
+                                                  color: AppColor.blackColor,
+                                                  fontSize: AppFontSize.s10,
+                                                ),
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                        const SizedBox(width: 8),
-                                      ],
-
-                                      // Accept Button (hide if already accepted)
-                                      if (jobAcceptStatus[index] != true)
-                                        GestureDetector(
-                                          onTap: () async {
-                                            setState(() => jobAcceptStatus[index] = true);
-                                            final request = TicketUpdateRequest(
-                                              ticketId: job.ticketId,
-                                              status: "Accept",
-                                              uniqueId: job.uniqueId,
-                                            );
-                                            try {
-                                              await context
-                                                  .read<TicketStatusUpdateController>()
-                                                  .updateTicketStatus(request);
-                                              showSnackBar(context, "Job Accepted Successfully");
-                                            } catch (e) {
+                                          GestureDetector(
+                                            onTap: () {
                                               setState(() => jobAcceptStatus[index] = null);
-                                              showSnackBar(context, "Failed to update status");
-                                            }
-                                          },
-                                          child: Container(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 12, vertical: 6),
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(horizontal: 3, vertical: 4),
+                                              decoration: BoxDecoration(
+                                                color: jobAcceptStatus[index] == null
+                                                    ? Colors.blue
+                                                    : Colors.grey[300],
+                                                borderRadius: BorderRadius.circular(12),
+                                              ),
+                                              child: CustomText(
+                                                text: "Scheduled",
+                                                color: AppColor.blackColor,
+                                                fontSize: AppFontSize.s10,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+
+                                        /// Accept button always shows (or you can hide if already accepted)
+                                        if (jobAcceptStatus[index] != true)
+                                          GestureDetector(
+                                            onTap: () async {
+                                              setState(() => jobAcceptStatus[index] = true);
+                                              final request = TicketUpdateRequest(
+                                                ticketId: job.ticketId,
+                                                status: "Accept", uniqueId: job.uniqueId,
+                                              );
+                                              try {
+                                                await context
+                                                    .read<TicketStatusUpdateController>()
+                                                    .updateTicketStatus(request);
+                                                showSnackBar(context, "Job Accepted Successfully");
+                                              } catch (e) {
+                                                setState(() => jobAcceptStatus[index] = null);
+                                                showSnackBar(context, "Failed to update status");
+                                              }
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.symmetric(horizontal: 3, vertical: 4),
+                                              decoration: BoxDecoration(
+                                                color: Colors.green,
+                                                borderRadius: BorderRadius.circular(12),
+                                              ),
+                                              child: CustomText(
+                                                text: "Accept",
+                                                color: AppColor.blackColor,
+                                                fontSize: AppFontSize.s10,
+                                              ),
+                                            ),
+                                          ),
+
+                                        /// If job is accepted, you can optionally just show a green label
+                                        if (jobAcceptStatus[index] == true)
+                                          Container(
+                                            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                             decoration: BoxDecoration(
                                               color: Colors.green,
                                               borderRadius: BorderRadius.circular(12),
                                             ),
-                                            child: const Text(
-                                              "Accept",
-                                              style: TextStyle(
-                                                  fontSize: 12, color: Colors.black87),
+                                            child: CustomText(
+                                              text: "Accepted",
+                                              color: AppColor.primaryWhite,
+                                              fontSize: AppFontSize.s10,
                                             ),
                                           ),
-                                        ),
-
-                                      // Show Accepted label if accepted
-                                      if (jobAcceptStatus[index] == true)
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 12, vertical: 6),
-                                          decoration: BoxDecoration(
-                                            color: Colors.green,
-                                            borderRadius: BorderRadius.circular(12),
-                                          ),
-                                          child: const Text(
-                                            "Accepted",
-                                            style: TextStyle(
-                                                fontSize: 12, color: Colors.white),
-                                          ),
-                                        ),
-                                    ],
-                                  ),
-                                ),
-
-                              const SizedBox(height: 10),
-
-                              // Service Notes and Technician Remarks labels
-                              Row(
-                                children:  [
-                                  Expanded(
-                                    child: Text(
-                                      'Service Notes',
-                                      style: TextStyle(
-                                          fontSize: 14, color: AppColor.statusBlue),
+                                      ],
                                     ),
-                                  ),
-                                  SizedBox(width: 10),
-                                  Expanded(
-                                    child: Text(
-                                      'Technician Remarks',
-                                      style: TextStyle(
-                                          fontSize: 14, color: AppColor.statusBlue),
-                                    ),
-                                  ),
                                 ],
                               ),
+                              // Service Notes and Technician Remarks labels
+                              Row(
+                                children: [
+
+                                  CustomText(
+                                    text: 'Service Notes',
+                                    fontSize: AppFontSize.s14,
+                                    color: AppColor.statusBlue,
+
+                                  ),
+                                  10.width,
+                                  CustomText(
+                                    text: 'Technician Remarks',
+                                    fontSize: AppFontSize.s14,
+                                    color: AppColor.statusBlue,
+
+                                  ),],
+                              )
                             ],
                           ),
                         ),

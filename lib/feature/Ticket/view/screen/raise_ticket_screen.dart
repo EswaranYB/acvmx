@@ -39,6 +39,8 @@ class _RaiseTicketScreenState extends State<RaiseTicketScreen> {
 
   final TextEditingController _locationController = TextEditingController();
 
+  final ValueNotifier<String> _priorityNotifier = ValueNotifier<String>('Low');
+
   final userId = SharedPrefService().getUserId();
 
   void initState(){
@@ -219,6 +221,54 @@ class _RaiseTicketScreenState extends State<RaiseTicketScreen> {
                                     )),
                               ],
                             ),
+                            15.height,
+                            Row(
+                              children: [
+                                title('Priority status'),
+                                Expanded(
+                                  flex: 3,
+                                  child: ValueListenableBuilder<String>(
+                                    valueListenable: _priorityNotifier,
+                                    builder: (context, value, child) {
+                                      return Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                                        decoration: BoxDecoration(
+                                          color: AppColor.greyF4F4F4, // same as your textfield bg
+                                          borderRadius: BorderRadius.circular(8), // same radius as textfield
+                                          border: Border.all(color: AppColor.greyE4E4E4), // border like textfield
+                                          boxShadow: greyBoxShadow(), // optional if you want shadows like textfield
+                                        ),
+                                        child: DropdownButton<String>(
+                                          value: value,
+                                          underline: Container(), // removes default underline
+                                          isExpanded: true,
+                                          icon: const Icon(Icons.arrow_drop_down, color: Colors.black54),
+                                          dropdownColor: AppColor.primaryWhite, // dropdown menu bg color
+                                          items: ['Urgent', 'High', 'Low'].map((String priorityValue) {
+                                            return DropdownMenuItem<String>(
+                                              value: priorityValue,
+                                              child: CustomText(
+                                                text: priorityValue,
+                                                fontSize: AppFontSize.s17,
+                                                fontWeight: AppFontWeight.w600,
+                                                color: AppColor.blackColor,
+                                              ),
+                                            );
+                                          }).toList(),
+                                          onChanged: (String? newValue) {
+                                            if (newValue != null) {
+                                              _priorityNotifier.value = newValue;
+                                            }
+                                          },
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+
+
                           ],
                         ),
                       ),
@@ -248,7 +298,8 @@ class _RaiseTicketScreenState extends State<RaiseTicketScreen> {
                             showSnackBar(context, "Please Enter Comment");
                           } else if (location.isEmpty) {
                             showSnackBar(context, "Please Enter Location");
-                          } else {
+                          }
+                                                    else {
                             try {
                               showLoadingDialog(context, message: 'Raising ticket...');
 
@@ -258,6 +309,7 @@ class _RaiseTicketScreenState extends State<RaiseTicketScreen> {
                                 problems: title,
                                 location: location,
                                 comments: serviceNotes,
+                                priority: _priorityNotifier.value,
                                 video: File(widget.videoPath),
                               );
 
