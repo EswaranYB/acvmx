@@ -16,24 +16,38 @@ import '../../../../core/routes/route_name.dart';
 import '../../../../core/sharedpreferences/sharedpreferences_services.dart';
 import '../../../Ticket/controller/raised_ticket_by_customerid_controller.dart';
 
-class CustomerHomeScreen extends StatelessWidget {
-   CustomerHomeScreen({super.key});
+class CustomerHomeScreen extends StatefulWidget {
+  const CustomerHomeScreen({super.key});
+
+  @override
+  State<CustomerHomeScreen> createState() => _CustomerHomeScreenState();
+}
+
+class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
   final TextEditingController codeController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+
+    final userId = SharedPrefService().getUserId();
+
+    if (userId != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final raisedTicketController =
+            context.read<RaisedTicketsController>();
+        final getUserDetail = context.read<GetUserDetailsProvider>();
+
+        raisedTicketController.fetchTicketsByCustomerId(userId);
+        getUserDetail.getUserDetailsApiCall(userId);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final userId = SharedPrefService().getUserId();
-   final raisedTicketController=context.read<RaisedTicketsController>();
-   final getUserDetail = context.read<GetUserDetailsProvider>();
     final productController = context.read<ProductDetailProvider>();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (userId != null) {
-        print("================$userId");
-        raisedTicketController.fetchTicketsByCustomerId(userId);
-        getUserDetail.getUserDetailsApiCall(userId);
-      }
-    });
-
 
     return PopScope(
       child: GestureDetector(
@@ -66,9 +80,11 @@ class CustomerHomeScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Selector<GetUserDetailsProvider, String?>(
-                                  selector: (_, provider) => provider.userDetailsByIdResponse?.image,
+                                  selector: (_, provider) =>
+                                      provider.userDetailsByIdResponse?.image,
                                   builder: (context, imageUrl, child) {
-                                    final bool hasImage = imageUrl != null && imageUrl.isNotEmpty;
+                                    final bool hasImage = imageUrl != null &&
+                                        imageUrl.isNotEmpty;
 
                                     return CircleAvatar(
                                       radius: 30,
@@ -76,40 +92,47 @@ class CustomerHomeScreen extends StatelessWidget {
                                       child: ClipOval(
                                         child: hasImage
                                             ? Image.network(
-                                          imageUrl,
-                                          width: 60,
-                                          height: 60,
-                                          fit: BoxFit.cover,
-                                          loadingBuilder: (context, child, loadingProgress) {
-                                            if (loadingProgress == null) return child;
-                                            return Center(
-                                              child: SizedBox(
-                                                width: 24,
-                                                height: 24,
-                                                child: CircularProgressIndicator(
-                                                  strokeWidth: 2,
-                                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                                    AppColor.primaryColor,
-                                                  ),
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                          errorBuilder: (context, error, stackTrace) {
-                                            return SvgPicture.asset(
-                                              AppIcons.profile,
-                                              width: 30,
-                                              height: 30,
-                                              fit: BoxFit.cover,
-                                            );
-                                          },
-                                        )
+                                                imageUrl,
+                                                width: 60,
+                                                height: 60,
+                                                fit: BoxFit.cover,
+                                                loadingBuilder: (context, child,
+                                                    loadingProgress) {
+                                                  if (loadingProgress == null) {
+                                                    return child;
+                                                  }
+                                                  return Center(
+                                                    child: SizedBox(
+                                                      width: 24,
+                                                      height: 24,
+                                                      child:
+                                                          CircularProgressIndicator(
+                                                        strokeWidth: 2,
+                                                        valueColor:
+                                                            AlwaysStoppedAnimation<
+                                                                Color>(
+                                                          AppColor.primaryColor,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                                errorBuilder:
+                                                    (context, error, stackTrace) {
+                                                  return SvgPicture.asset(
+                                                    AppIcons.profile,
+                                                    width: 30,
+                                                    height: 30,
+                                                    fit: BoxFit.cover,
+                                                  );
+                                                },
+                                              )
                                             : SvgPicture.asset(
-                                          AppIcons.profile,
-                                          width: 30,
-                                          height: 30,
-                                          fit: BoxFit.cover,
-                                        ),
+                                                AppIcons.profile,
+                                                width: 30,
+                                                height: 30,
+                                                fit: BoxFit.cover,
+                                              ),
                                       ),
                                     );
                                   },
@@ -117,7 +140,8 @@ class CustomerHomeScreen extends StatelessWidget {
                                 20.width,
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       CustomText(
                                         text: 'Hello,',
@@ -125,7 +149,8 @@ class CustomerHomeScreen extends StatelessWidget {
                                         color: AppColor.primaryWhite,
                                       ),
                                       Selector<GetUserDetailsProvider, String?>(
-                                        selector: (_, provider) => provider.userDetailsByIdResponse?.username,
+                                        selector: (_, provider) => provider
+                                            .userDetailsByIdResponse?.username,
                                         builder: (_, username, __) {
                                           return CustomText(
                                             text: username ?? 'User',
@@ -166,16 +191,16 @@ class CustomerHomeScreen extends StatelessWidget {
                                 ),
                                 trailing: CircleAvatar(
                                   backgroundColor: AppColor.primaryWhite,
-                                  child: Consumer<RaisedTicketsController>(
-                                    builder: (context,controller, child) {
-                                      return CustomText(
-                                        text: controller.ticketCount.toString(),
-                                        fontSize: AppFontSize.s24,
-                                        color: AppColor.primaryColor,
-                                        fontWeight: FontWeight.w900,
-                                      );
-                                    }
-                                  ),
+                                  child:
+                                      Consumer<RaisedTicketsController>(builder:
+                                          (context, controller, child) {
+                                    return CustomText(
+                                      text: controller.ticketCount.toString(),
+                                      fontSize: AppFontSize.s24,
+                                      color: AppColor.primaryColor,
+                                      fontWeight: FontWeight.w900,
+                                    );
+                                  }),
                                 ),
                               ),
                             ),
@@ -218,7 +243,8 @@ class CustomerHomeScreen extends StatelessWidget {
                           color: AppColor.primaryWhite,
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
-                            color: AppColor.grey7C7C7C.withValues(alpha: 0.2),
+                            color:
+                                AppColor.grey7C7C7C.withValues(alpha: 0.2),
                             width: 2,
                           ),
                         ),
@@ -238,7 +264,6 @@ class CustomerHomeScreen extends StatelessWidget {
                       20.height,
                       AppButton(
                         text: 'Submit',
-                        // onPressed: ()=> FirebaseCrashlytics.instance.crash(),
                         onPressed: () => _handleCodeSubmit(
                           context,
                           codeController,
@@ -257,8 +282,7 @@ class CustomerHomeScreen extends StatelessWidget {
     );
   }
 
-  // Handle code submission
-  static Future<void>  _handleCodeSubmit(
+  static Future<void> _handleCodeSubmit(
     BuildContext context,
     TextEditingController codeController,
     ProductDetailProvider productController,
@@ -266,17 +290,15 @@ class CustomerHomeScreen extends StatelessWidget {
     final code = codeController.text.trim();
 
     if (code.isEmpty) {
-      showSnackBar(context,'Please enter the Serial Number.');
-    }else{
-
-    try {
-      await productController.handleSerialNumberScan(context, code);
-      // Clear the field after successful submission
-      codeController.clear();
-    } catch (e) {
-
-      showSnackBar(context,'Error: ${e.toString()}');
-      AppLog.d('Error in handleCodeSubmit: $e');
+      showSnackBar(context, 'Please enter the Serial Number.');
+    } else {
+      try {
+        await productController.handleSerialNumberScan(context, code);
+        codeController.clear();
+      } catch (e) {
+        showSnackBar(context, 'Error: ${e.toString()}');
+        AppLog.d('Error in handleCodeSubmit: $e');
+      }
     }
-  }}
+  }
 }

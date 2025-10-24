@@ -53,56 +53,60 @@ class _WorkerScheduledJobsState extends State<WorkerScheduledJobs>
     });
   }
 
-Future<void> _fetchAndInitializeJobs() async {
-  final ticketController = Provider.of<GetTicketByTechnicianController>(context, listen: false);
-  final statusController = Provider.of<TicketStatusUpdateController>(context, listen: false);
+  Future<void> _fetchAndInitializeJobs() async {
+    final ticketController =
+        Provider.of<GetTicketByTechnicianController>(context, listen: false);
+    final statusController =
+        Provider.of<TicketStatusUpdateController>(context, listen: false);
 
-  String type ='';
-  switch (widget.title.replaceAll('\n', ' ').replaceAll(RegExp(r'\s+'),' ').trim()) {
-    case 'Work allocated':
-      type ='today';
-      break;
-    case 'Upcoming jobs':
-      type = 'upcoming';
-      break;
-    case 'Overdue jobs':
-      type = 'past';
-      break;
-    case 'Waiting for submission':
-      type = 'waiting';
-      break;
-    default:
-  }
+    String type = '';
+    switch (widget.title
+        .replaceAll('\n', ' ')
+        .replaceAll(RegExp(r'\s+'), ' ')
+        .trim()) {
+      case 'Work allocated':
+        type = 'today';
+        break;
+      case 'Upcoming jobs':
+        type = 'upcoming';
+        break;
+      case 'Overdue jobs':
+        type = 'past';
+        break;
+      case 'Waiting for submission':
+        type = 'waiting';
+        break;
+      default:
+    }
 
-  // Fetch scheduled jobs (past)
-  await ticketController.fetchScheduledJobs(context, '6842b74489a8c', type);
+    // Fetch scheduled jobs (past)
+    await ticketController.fetchScheduledJobs(context, '6842b74489a8c', type);
 
-  // ✅ Use parsed data from workerSheduledJobs instead of raw scheduledJobs
-  final scheduledJobs = ticketController.workerSheduledJobs;
+    // ✅ Use parsed data from workerSheduledJobs instead of raw scheduledJobs
+    final scheduledJobs = ticketController.workerSheduledJobs;
 
-  // Initialize jobAcceptStatus with null values for all jobs
-  jobAcceptStatus = List<bool?>.filled(scheduledJobs.length, null);
+    // Initialize jobAcceptStatus with null values for all jobs
+    jobAcceptStatus = List<bool?>.filled(scheduledJobs.length, null);
 
-  for (int i = 0; i < scheduledJobs.length; i++) {
-    final job = scheduledJobs[i];
-    final savedStatus = statusController.getSavedJobStatus(job.uniqueId);
+    for (int i = 0; i < scheduledJobs.length; i++) {
+      final job = scheduledJobs[i];
+      final savedStatus = statusController.getSavedJobStatus(job.uniqueId);
 
-    if (savedStatus != null) {
-      final statusLower = savedStatus.toLowerCase();
-      if (statusLower == "accept") {
-        jobAcceptStatus[i] = true;
-      } else if (statusLower == "reject") {
-        jobAcceptStatus[i] = false;
-      } else {
-        jobAcceptStatus[i] = null;
+      if (savedStatus != null) {
+        final statusLower = savedStatus.toLowerCase();
+        if (statusLower == "accept") {
+          jobAcceptStatus[i] = true;
+        } else if (statusLower == "reject") {
+          jobAcceptStatus[i] = false;
+        } else {
+          jobAcceptStatus[i] = null;
+        }
       }
     }
+
+    if (mounted) setState(() {});
   }
 
-  if (mounted) setState(() {});
-}
-
-  
   @override
   void dispose() {
     _controller.dispose();
@@ -136,8 +140,7 @@ Future<void> _fetchAndInitializeJobs() async {
                 return const Center(child: CircularProgressIndicator());
               }
 
-            final tickets = provider.workerSheduledJobs;
-
+              final tickets = provider.workerSheduledJobs;
 
               if (tickets.isEmpty) {
                 return Center(
@@ -174,8 +177,8 @@ Future<void> _fetchAndInitializeJobs() async {
                             width: 1,
                           ),
                         ),
-                        margin:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        margin: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
                         child: Padding(
                           padding: const EdgeInsets.all(16),
                           child: Column(
@@ -189,28 +192,33 @@ Future<void> _fetchAndInitializeJobs() async {
                                   Text(
                                     'Job ID ${job.jobId}',
                                     style: const TextStyle(
-                                        fontWeight: FontWeight.w600, fontSize: 14),
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 14),
                                   ),
                                   const Spacer(),
                                   AppButton(
-                                    text: job.ticketStatus.toLowerCase() == 'scheduled'
+                                    text: job.ticketStatus.toLowerCase() ==
+                                            'scheduled'
                                         ? 'Service'
                                         : 'View',
-                                    color: job.ticketStatus.toLowerCase() == 'scheduled'
+                                    color: job.ticketStatus.toLowerCase() ==
+                                            'scheduled'
                                         ? AppColor.ticketraisedbutton
                                         : AppColor.greyE4E4E4,
-                                    textColor: job.ticketStatus.toLowerCase() == 'scheduled'
+                                    textColor: job.ticketStatus.toLowerCase() ==
+                                            'scheduled'
                                         ? AppColor.service
                                         : AppColor.textColor000000,
                                     onPressed: () async {
-                                      provider.setTicketId(
-                                          job.uniqueId, job.jobUniqueId.toString());
+                                      provider.setTicketId(job.uniqueId,
+                                          job.jobUniqueId.toString());
                                       final result = await Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                           builder: (_) => JobDetailsScreen(
                                             ticketId: job.uniqueId,
-                                            jobUniqueId: job.jobUniqueId.toString(),
+                                            jobUniqueId:
+                                                job.jobUniqueId.toString(),
                                           ),
                                         ),
                                       );
@@ -245,8 +253,8 @@ Future<void> _fetchAndInitializeJobs() async {
                                       color: job.ticketStatus == 'Completed'
                                           ? AppColor.statusGreen
                                           : job.ticketStatus == 'Scheduled'
-                                          ? AppColor.statusBlue
-                                          : AppColor.statusRed,
+                                              ? AppColor.statusBlue
+                                              : AppColor.statusRed,
                                     ),
                                   ),
                                   5.width,
@@ -275,7 +283,8 @@ Future<void> _fetchAndInitializeJobs() async {
                                     color: AppColor.customerStatus,
                                   ),
                                   Spacer(),
-                                  if (job.ticketStatus.toLowerCase() == 'scheduled')
+                                  if (job.ticketStatus.toLowerCase() ==
+                                      'scheduled')
                                     Row(
                                       spacing: 8,
                                       children: [
@@ -283,31 +292,46 @@ Future<void> _fetchAndInitializeJobs() async {
                                           // Reject button
                                           GestureDetector(
                                             onTap: () async {
-                                              setState(() => jobAcceptStatus[index] = false);
-                                              final request = TicketUpdateRequest(
+                                              setState(() =>
+                                                  jobAcceptStatus[index] =
+                                                      false);
+                                              final request =
+                                                  TicketUpdateRequest(
                                                 ticketId: job.ticketId,
-                                                status: "Reject", uniqueId:job.uniqueId,
+                                                status: "Reject",
+                                                uniqueId: job.uniqueId,
                                               );
                                               try {
                                                 await context
-                                                    .read<TicketStatusUpdateController>()
-                                                    .updateTicketStatus(request);
-                                                showSnackBar(context, "Job Rejected Successfully");
+                                                    .read<
+                                                        TicketStatusUpdateController>()
+                                                    .updateTicketStatus(
+                                                        request);
+                                                showSnackBar(context,
+                                                    "Job Rejected Successfully");
                                               } catch (e) {
-                                                setState(() => jobAcceptStatus[index] = null);
-                                                showSnackBar(context, "Failed to update status");
+                                                setState(() =>
+                                                    jobAcceptStatus[index] =
+                                                        null);
+                                                showSnackBar(context,
+                                                    "Failed to update status");
                                               }
                                             },
                                             child: Container(
-                                              padding: EdgeInsets.symmetric(horizontal: 1, vertical: 4),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 1, vertical: 4),
                                               decoration: BoxDecoration(
-                                                color: jobAcceptStatus[index] == false
+                                                color: jobAcceptStatus[index] ==
+                                                        false
                                                     ? Colors.red
                                                     : Colors.grey[300],
-                                                borderRadius: BorderRadius.circular(12),
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
                                               ),
                                               child: Padding(
-                                                padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 2.0),
                                                 child: CustomText(
                                                   text: "Reject",
                                                   color: AppColor.blackColor,
@@ -318,15 +342,20 @@ Future<void> _fetchAndInitializeJobs() async {
                                           ),
                                           GestureDetector(
                                             onTap: () {
-                                              setState(() => jobAcceptStatus[index] = null);
+                                              setState(() =>
+                                                  jobAcceptStatus[index] =
+                                                      null);
                                             },
                                             child: Container(
-                                              padding: EdgeInsets.symmetric(horizontal: 3, vertical: 4),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 3, vertical: 4),
                                               decoration: BoxDecoration(
-                                                color: jobAcceptStatus[index] == null
+                                                color: jobAcceptStatus[index] ==
+                                                        null
                                                     ? Colors.blue
                                                     : Colors.grey[300],
-                                                borderRadius: BorderRadius.circular(12),
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
                                               ),
                                               child: CustomText(
                                                 text: "Scheduled",
@@ -341,26 +370,38 @@ Future<void> _fetchAndInitializeJobs() async {
                                         if (jobAcceptStatus[index] != true)
                                           GestureDetector(
                                             onTap: () async {
-                                              setState(() => jobAcceptStatus[index] = true);
-                                              final request = TicketUpdateRequest(
+                                              setState(() =>
+                                                  jobAcceptStatus[index] =
+                                                      true);
+                                              final request =
+                                                  TicketUpdateRequest(
                                                 ticketId: job.ticketId,
-                                                status: "Accept", uniqueId: job.uniqueId,
+                                                status: "Accept",
+                                                uniqueId: job.uniqueId,
                                               );
                                               try {
                                                 await context
-                                                    .read<TicketStatusUpdateController>()
-                                                    .updateTicketStatus(request);
-                                                showSnackBar(context, "Job Accepted Successfully");
+                                                    .read<
+                                                        TicketStatusUpdateController>()
+                                                    .updateTicketStatus(
+                                                        request);
+                                                showSnackBar(context,
+                                                    "Job Accepted Successfully");
                                               } catch (e) {
-                                                setState(() => jobAcceptStatus[index] = null);
-                                                showSnackBar(context, "Failed to update status");
+                                                setState(() =>
+                                                    jobAcceptStatus[index] =
+                                                        null);
+                                                showSnackBar(context,
+                                                    "Failed to update status");
                                               }
                                             },
                                             child: Container(
-                                              padding: EdgeInsets.symmetric(horizontal: 3, vertical: 4),
+                                              padding: EdgeInsets.symmetric(
+                                                  horizontal: 3, vertical: 4),
                                               decoration: BoxDecoration(
                                                 color: Colors.green,
-                                                borderRadius: BorderRadius.circular(12),
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
                                               ),
                                               child: CustomText(
                                                 text: "Accept",
@@ -373,10 +414,12 @@ Future<void> _fetchAndInitializeJobs() async {
                                         /// If job is accepted, you can optionally just show a green label
                                         if (jobAcceptStatus[index] == true)
                                           Container(
-                                            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 8, vertical: 4),
                                             decoration: BoxDecoration(
                                               color: Colors.green,
-                                              borderRadius: BorderRadius.circular(12),
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
                                             ),
                                             child: CustomText(
                                               text: "Accepted",
@@ -395,15 +438,14 @@ Future<void> _fetchAndInitializeJobs() async {
                                     text: 'Service Notes',
                                     fontSize: AppFontSize.s14,
                                     color: AppColor.statusBlue,
-
                                   ),
                                   10.width,
                                   CustomText(
                                     text: 'Technician Remarks',
                                     fontSize: AppFontSize.s14,
                                     color: AppColor.statusBlue,
-
-                                  ),],
+                                  ),
+                                ],
                               )
                             ],
                           ),
