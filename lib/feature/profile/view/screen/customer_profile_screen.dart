@@ -53,7 +53,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
                   ),
                 ]),
                 body: controller.isLoading
-                    ? const Center(child: CircularProgressIndicator())
+                    ?  Center(child: CircularProgressIndicator(color: AppColor.primaryColor,))
                     : profileData == null
                     ? const Center(child: CustomText(text: 'No data available.'))
                     : Padding(

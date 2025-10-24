@@ -120,7 +120,7 @@ class _RecentJobsState extends State<RecentJobs> with TickerProviderStateMixin {
           body: Consumer<GetTicketByTechnicianController>(
             builder: (context, provider, _) {
               if (provider.isLoading) {
-                return const Center(child: CircularProgressIndicator());
+                return Center(child: CircularProgressIndicator(color: AppColor.primaryColor,));
               } else {
                 if (provider.ticketByTechnician.isEmpty) {
                   return Center(

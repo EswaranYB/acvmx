@@ -312,7 +312,7 @@ class _ReportedIssue extends State<ReportedIssue> {
                 appBar: commonAppBar(context,
                     showLeading: true, title: 'Customer Profile'),
                 body: provider.isLoading
-                    ? const Center(child: CircularProgressIndicator())
+                    ?  Center(child: CircularProgressIndicator(color: AppColor.primaryColor,))
                     : tickets == null
                     ? const Center(child: CustomText(text: 'No data available.'))
                     : SingleChildScrollView(

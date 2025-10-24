@@ -27,7 +27,7 @@ class WorkerProfile extends StatelessWidget {
               ),
               onPressed: () =>showLogoutDialog(context),
             ),]),
-          body: provider.isLoading? const Center(child: CircularProgressIndicator())
+          body: provider.isLoading?  Center(child: CircularProgressIndicator(color: AppColor.primaryColor,))
               :profileData == null
               ? const Center(child: CustomText(text: 'No data available.'))
               : Padding(

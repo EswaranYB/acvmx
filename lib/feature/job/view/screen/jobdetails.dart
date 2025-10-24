@@ -107,7 +107,7 @@ class _JobDetailsScreenState extends State<JobDetailsScreen> {
                 title: 'Job ID ${ticketDetails?.ticket?.jobId ??""}',
               ),
               body: controller.isLoading
-                  ? const Center(child: CircularProgressIndicator())
+                  ? Center(child: CircularProgressIndicator(color: AppColor.primaryColor,))
                   : ticketDetails == null
                   ? const Center(child: CustomText(text: 'No data available.'))
                   : SingleChildScrollView(

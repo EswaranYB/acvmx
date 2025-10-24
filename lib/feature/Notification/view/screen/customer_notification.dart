@@ -43,7 +43,7 @@ class _CustomerNotificationState extends State<CustomerNotification> {
             showLeading: false,
           ),
           body: controller.isLoading
-              ? const Center(child: CircularProgressIndicator())
+              ?  Center(child: CircularProgressIndicator(color: AppColor.primaryColor,))
               : Padding(
             padding: const EdgeInsets.all(16),
             child: notifications.isEmpty

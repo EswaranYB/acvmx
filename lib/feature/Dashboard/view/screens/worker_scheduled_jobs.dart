@@ -2,7 +2,9 @@ import 'package:acvmx/core/app_decoration.dart';
 import 'package:acvmx/core/app_colors.dart';
 import 'package:acvmx/core/custom_text.dart';
 import 'package:acvmx/core/responsive.dart';
+import 'package:acvmx/core/sharedpreferences/sharedpreferences_services.dart';
 import 'package:acvmx/feature/Dashboard/view/widgets/appbar.dart';
+import 'package:acvmx/feature/profile/controller/worker_profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -79,8 +81,12 @@ class _WorkerScheduledJobsState extends State<WorkerScheduledJobs>
       default:
     }
 
-    // Fetch scheduled jobs (past)
-    await ticketController.fetchScheduledJobs(context, '6842b74489a8c', type);
+    final userId = SharedPrefService().getUserId();
+      // Fetch scheduled jobs (past)
+    if (userId != null) {
+      await ticketController.fetchScheduledJobs(context,userId, type);
+    }
+
 
     // ✅ Use parsed data from workerSheduledJobs instead of raw scheduledJobs
     final scheduledJobs = ticketController.workerSheduledJobs;
@@ -89,7 +95,7 @@ class _WorkerScheduledJobsState extends State<WorkerScheduledJobs>
     jobAcceptStatus = List<bool?>.filled(scheduledJobs.length, null);
 
     for (int i = 0; i < scheduledJobs.length; i++) {
-      final job = scheduledJobs[i];
+      final job = scheduledJobs[i];  
       final savedStatus = statusController.getSavedJobStatus(job.uniqueId);
 
       if (savedStatus != null) {
@@ -137,7 +143,7 @@ class _WorkerScheduledJobsState extends State<WorkerScheduledJobs>
           body: Consumer<GetTicketByTechnicianController>(
             builder: (context, provider, _) {
               if (provider.isLoading) {
-                return const Center(child: CircularProgressIndicator());
+                return  Center(child: CircularProgressIndicator(color: AppColor.primaryColor,));
               }
 
               final tickets = provider.workerSheduledJobs;
