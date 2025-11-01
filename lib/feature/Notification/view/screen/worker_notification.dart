@@ -1,6 +1,5 @@
 import 'package:acvmx/core/app_assets.dart';
 import 'package:acvmx/core/app_colors.dart';
-import 'package:acvmx/core/appbutton.dart';
 import 'package:acvmx/core/custom_text.dart';
 import 'package:acvmx/core/responsive.dart';
 import 'package:flutter/material.dart';
@@ -104,16 +103,16 @@ class _WorkerNotificationState extends State<WorkerNotification> {
                                   fontWeight:
                                   AppFontWeight.w600,
                                 ),
-                                7.height,
-                                CustomText(
-                                  text:
-                                  "Ticket id: ${notification.ticketId}",
-                                  fontSize: AppFontSize.s14,
-                                  fontWeight:
-                                  AppFontWeight.w400,
-                                  color:
-                                  AppColor.textColor000000,
-                                ),
+                                // 7.height,
+                                // CustomText(
+                                //   text:
+                                //   "Ticket id: ${notification.ticketId}",
+                                //   fontSize: AppFontSize.s14,
+                                //   fontWeight:
+                                //   AppFontWeight.w400,
+                                //   color:
+                                //   AppColor.textColor000000,
+                                // ),
                                 7.height,
                                 CustomText(
                                   text:

@@ -38,7 +38,7 @@ class _CustomerProfileState extends State<CustomerProfile> {
           child: Consumer2<GetUserDetailsProvider,CustomerProfileProductProvider>(
             builder: (context, controller,productProvider, child) {
               final profileData = controller.userDetailsByIdResponse;
-              final products = productProvider.selectedProducts ?? [];
+              final products = productProvider.selectedProducts;
 
               return Scaffold(
                 backgroundColor: AppColor.primaryWhite,
@@ -104,63 +104,104 @@ class _CustomerProfileState extends State<CustomerProfile> {
                               fontWeight: AppFontWeight.w600,
                               color: AppColor.primaryColor,
                             ),
-                            for (var selectedProduct in products) ...[
-
-                              Container(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 12, vertical: 10),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    border: Border.all(color: AppColor.primaryWhite),
-                                    color: AppColor.primaryWhite),
-                                child: Column(
-                                  spacing: 6,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          final key = selectedProduct.serialNo ?? '';
-                                          machineExpandedState[key] =
-                                          !(machineExpandedState[key] ?? false);
-                                        });
-                                      },
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8,),
-                                        decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(8),
-                                            border: Border.all(color: AppColor.primaryWhite),
-                                            color: AppColor.primaryWhite
+                            10.height,
+                            products.length < 1?
+                            CustomText(
+                              text: "No Machines",
+                              fontSize: AppFontSize.s14,
+                              fontWeight: AppFontWeight.w600,
+                              color: AppColor.grey7C7C7C,
+                            ):SizedBox.shrink(),
+                            for (int p = 0; p < products.length; p++) ...[
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 12, vertical: 10),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        border:
+                                            Border.all(color: AppColor.blackColor),
+                                        color: AppColor.primaryWhite),
+                                    child: Column(
+                                      spacing: 6,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            setState(() {
+                                              final key =
+                                                  products[p].serialNo ?? '';
+                                              machineExpandedState[key] =
+                                                  !(machineExpandedState[key] ??
+                                                      false);
+                                            });
+                                          },
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                border: Border.all(
+                                                    color:
+                                                        AppColor.primaryWhite),
+                                                color: AppColor.primaryWhite),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                CustomText(
+                                                    text: "Machine 0${p + 1}",
+                                                    fontSize: AppFontSize.s15,
+                                                    fontWeight:
+                                                        AppFontWeight.w600,
+                                                    color: AppColor
+                                                        .textColor000000),
+                                                Icon(
+                                                    machineExpandedState[products[
+                                                                        p]
+                                                                    .serialNo ??
+                                                                ''] ??
+                                                            false
+                                                        ? Icons
+                                                            .keyboard_arrow_up
+                                                        : Icons
+                                                            .keyboard_arrow_down,
+                                                    color: AppColor
+                                                        .textColor000000),
+                                              ],
+                                            ),
+                                          ),
                                         ),
-                                        child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(selectedProduct.modelName ?? "Select Machine",
-                                                style: TextStyle(
-                                                    fontSize: AppFontSize.s14,
-                                                    fontWeight: AppFontWeight.w600,
-                                                    color: AppColor.textColor000000)),
-                                            Icon(
-                                                machineExpandedState[selectedProduct.serialNo ?? ''] ?? false
-                                                    ? Icons.arrow_drop_up
-                                                    : Icons.arrow_drop_down,
-                                                color: AppColor.textColor000000),
-                                          ],
-                                        ),
-                                      ),
+                                        if (machineExpandedState[
+                                                products[p].serialNo ?? ''] ??
+                                            false) ...[
+                                          10.height,
+                                          CustomText(
+                                              text:
+                                                  products[p].productName ?? '',
+                                              fontSize: AppFontSize.s16,
+                                              fontWeight: AppFontWeight.w600,
+                                              color: AppColor.textColor000000),
+                                          productInfo(
+                                              products[p].companyName, ""),
+                                          productInfo("Serial Number:",
+                                              products[p].serialNo ?? "N/A"),
+                                          productInfo(
+                                              "Purchase Date:",
+                                              products[p]
+                                                  .purchaseDate
+                                                  .toString()
+                                                  .substring(0, 10)),
+                                          productInfo(
+                                              "Warranty Status:",
+                                              products[p].warrantyDetails ??
+                                                  "N/A"),
+                                          // productInfo("Last Maintenance:", products[p].uniqueId ?? "N/A"),
+                                        ],
+                                      ],
                                     ),
-                                    if (machineExpandedState[selectedProduct.serialNo ?? ''] ?? false) ...[
-                                      10.height,
-                                      productInfo("", selectedProduct.masterProductName),
-                                      productInfo("", selectedProduct.companyName),
-                                      productInfo("Serial Number:", selectedProduct.serialNo ?? "N/A"),
-                                      productInfo("Purchase Date:", selectedProduct.uniqueId ?? "N/A"),
-                                      productInfo("Warranty Status:", selectedProduct.varrantyDetails ?? "N/A"),
-                                    ],
-                                  ],
-                                ),
-                              ),
-                            ],
+                                  ),
+                                ],
                           ],
                         ),
                       ),

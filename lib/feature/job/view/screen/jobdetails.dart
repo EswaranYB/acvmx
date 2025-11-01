@@ -12,7 +12,6 @@ import 'package:acvmx/feature/videorecording/view/screen/technician_recordingscr
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:provider/provider.dart';
 import '../../../../core/app_colors.dart';
 import '../../../../core/appbutton.dart';

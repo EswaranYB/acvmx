@@ -12,7 +12,6 @@ import '../../../../core/sharedpreferences/sharedpreferences_services.dart';
 import '../../../Dashboard/view/widgets/appbar.dart';
 import '../../../Ticket/controller/get_ticket_by_technician_controller.dart';
 import '../../controller/joblist_provider.dart';
-import '../../model/job_model.dart';
 
 class JobListScreen extends StatelessWidget {
   const JobListScreen({super.key});

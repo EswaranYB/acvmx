@@ -26,6 +26,11 @@ class ApiServices {
     return apiManager.post(ApiEndPoints.login, data: request.toJson());
   }
 
+  Future<ApiResponse> getUserProducts() {
+    return apiManager.get(ApiEndPoints.userProducts,
+        // queryParameters: {"user_id": customerId}, 
+        headers: headers);
+  }
   /// Get all tickets
   Future<ApiResponse> getTicketById(String ticketId) {
     return apiManager.get(ApiEndPoints.getTicketById,

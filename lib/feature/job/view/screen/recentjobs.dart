@@ -50,7 +50,7 @@ class _RecentJobsState extends State<RecentJobs> with TickerProviderStateMixin {
     _controller.forward();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final statusController = context.read<TicketStatusUpdateController>();
+      context.read<TicketStatusUpdateController>();
       await Future.delayed(const Duration(milliseconds: 300)); // wait for prefs load
       _initializeJobStatusFromAPI();
     });
@@ -244,41 +244,41 @@ class _RecentJobsState extends State<RecentJobs> with TickerProviderStateMixin {
                                           children: [
                                             if (jobAcceptStatus[index] != true) ...[
                                               // Reject button
-                                              GestureDetector(
-                                                onTap: () async {
-                                                  setState(() => jobAcceptStatus[index] = false);
-                                                  final request = TicketUpdateRequest(
-                                                    ticketId: job.ticketId,
-                                                    status: "Reject", uniqueId:job.uniqueId,
-                                                  );
-                                                  try {
-                                                    await context
-                                                        .read<TicketStatusUpdateController>()
-                                                        .updateTicketStatus(request);
-                                                    showSnackBar(context, "Job Rejected Successfully");
-                                                  } catch (e) {
-                                                    setState(() => jobAcceptStatus[index] = null);
-                                                    showSnackBar(context, "Failed to update status");
-                                                  }
-                                                },
-                                                child: Container(
-                                                  padding: EdgeInsets.symmetric(horizontal: 1, vertical: 4),
-                                                  decoration: BoxDecoration(
-                                                    color: jobAcceptStatus[index] == false
-                                                        ? Colors.red
-                                                        : Colors.grey[300],
-                                                    borderRadius: BorderRadius.circular(12),
-                                                  ),
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.symmetric(horizontal: 2.0),
-                                                    child: CustomText(
-                                                      text: "Reject",
-                                                      color: AppColor.blackColor,
-                                                      fontSize: AppFontSize.s10,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
+                                              // GestureDetector(
+                                              //   onTap: () async {
+                                              //     setState(() => jobAcceptStatus[index] = false);
+                                              //     final request = TicketUpdateRequest(
+                                              //       ticketId: job.ticketId,
+                                              //       status: "Reject", uniqueId:job.uniqueId,
+                                              //     );
+                                              //     try {
+                                              //       await context
+                                              //           .read<TicketStatusUpdateController>()
+                                              //           .updateTicketStatus(request);
+                                              //       showSnackBar(context, "Job Rejected Successfully");
+                                              //     } catch (e) {
+                                              //       setState(() => jobAcceptStatus[index] = null);
+                                              //       showSnackBar(context, "Failed to update status");
+                                              //     }
+                                              //   },
+                                              //   child: Container(
+                                              //     padding: EdgeInsets.symmetric(horizontal: 1, vertical: 4),
+                                              //     decoration: BoxDecoration(
+                                              //       color: jobAcceptStatus[index] == false
+                                              //           ? Colors.red
+                                              //           : Colors.grey[300],
+                                              //       borderRadius: BorderRadius.circular(12),
+                                              //     ),
+                                              //     child: Padding(
+                                              //       padding: const EdgeInsets.symmetric(horizontal: 2.0),
+                                              //       child: CustomText(
+                                              //         text: "Reject",
+                                              //         color: AppColor.blackColor,
+                                              //         fontSize: AppFontSize.s10,
+                                              //       ),
+                                              //     ),
+                                              //   ),
+                                              // ),
                                               GestureDetector(
                                                 onTap: () {
                                                   setState(() => jobAcceptStatus[index] = null);

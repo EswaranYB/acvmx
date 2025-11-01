@@ -408,7 +408,7 @@ void showLoadingDialog(BuildContext context, {String message = 'Loading...'}) {
                  CircularProgressIndicator(color: AppColor.primaryColor,),
                 24.width,
                 Expanded(
-                  child: CustomText(text:
+                  child: CustomText(text  :
                     message,
                     fontSize: AppFontSize.s16, fontWeight: AppFontWeight.w600,
                   ),

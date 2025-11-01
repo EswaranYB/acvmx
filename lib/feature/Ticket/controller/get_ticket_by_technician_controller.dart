@@ -114,7 +114,7 @@ Future<void> fetchScheduledJobs(
       userId,
       type,
     );
-
+    AppLog.d('testing response ${response.listData}');
     if (response.status == 200 && response.listData != null) {
       _scheduledJobs
         ..clear()
@@ -140,6 +140,8 @@ Future<void> fetchScheduledJobs(
     }
   } catch (e, stackTrace) {
     AppLog.e("Error fetching scheduled jobs: $e\n$stackTrace");
+
+    
     if (context.mounted) {
       showSnackBar(context, "Something went wrong: ${e.toString()}");
     }

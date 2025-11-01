@@ -12,6 +12,8 @@ class ProductDetailsBySerialNumberResponse {
   String? productId;
   String? productName;
   String? serialNo;
+  String? warrantyDetails;
+  DateTime? purchaseDate;
   String? varrantyDetails;
   DateTime? manufacturedDate;
   String? manufacturedBy;
@@ -69,6 +71,8 @@ class ProductDetailsBySerialNumberResponse {
     this.address,
     this.location,
     this.state,
+    this.purchaseDate,
+    this.warrantyDetails
   });
 
   factory ProductDetailsBySerialNumberResponse.fromJson(Map<String, dynamic> json) {
@@ -103,6 +107,8 @@ class ProductDetailsBySerialNumberResponse {
       address: json["address"],
       location: json["location"],
       state: json["state_name"],
+        warrantyDetails: json["warrenty_period"],
+      purchaseDate: json["buying_date"] == null ? null : DateTime.tryParse(json["buying_date"]),
     );
   }
 
@@ -137,5 +143,7 @@ class ProductDetailsBySerialNumberResponse {
     "address": address,
     "location": location,
     "state_name": state,
+    "warranty_details": warrantyDetails,
+    "buying_date": purchaseDate?.toIso8601String(),
   };
 }

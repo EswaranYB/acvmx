@@ -3,14 +3,12 @@ import 'package:acvmx/core/app_assets.dart';
 import 'package:acvmx/core/app_colors.dart';
 import 'package:acvmx/core/app_decoration.dart';
 import 'package:acvmx/core/custom_text.dart';
-import 'package:acvmx/core/routes/route_name.dart';
 import 'package:acvmx/core/sharedpreferences/sharedpreferences_services.dart';
 import 'package:acvmx/feature/Dashboard/controller/dashboard_job_count_controller.dart';
 import 'package:acvmx/feature/Dashboard/view/screens/worker_scheduled_jobs.dart';
 import 'package:acvmx/feature/profile/controller/worker_profile_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../../Ticket/controller/get_ticket_by_technician_controller.dart';
 import '../../controller/status_update_controller.dart';
@@ -380,7 +378,7 @@ String? userId;
                                     onTap: (){
                                       print('clicked ${index} ${provider.jobList[index].title}');
                                       Navigator.of(context).push(
-                                        MaterialPageRoute(builder: (context)=> WorkerScheduledJobs(title: provider.jobList[index].title.replaceAll('\n', ' ').replaceAll(RegExp(r'\s+'),' ').trim() ?? 'no title',))
+                                        MaterialPageRoute(builder: (context)=> WorkerScheduledJobs(title: provider.jobList[index].title.replaceAll('\n', ' ').replaceAll(RegExp(r'\s+'),' ').trim(),))
                                       );
                                     },
                                     child: Container(

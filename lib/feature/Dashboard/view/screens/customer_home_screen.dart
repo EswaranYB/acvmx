@@ -5,7 +5,6 @@ import 'package:acvmx/core/custom_text.dart';
 import 'package:acvmx/core/responsive.dart';
 import 'package:acvmx/feature/Dashboard/controller/get_product_detail_controller.dart';
 import 'package:acvmx/feature/profile/controller/get_user_details_controller.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';

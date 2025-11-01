@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../../core/app_assets.dart';
 import '../../../../core/app_colors.dart';
-import '../../../../core/appbutton.dart';
 import '../../../../core/custom_text.dart';
 import '../../../Dashboard/view/widgets/appbar.dart';
 import '../../controller/notification_controller.dart';
@@ -91,16 +89,16 @@ class _CustomerNotificationState extends State<CustomerNotification> {
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
                             ),
+                            // const SizedBox(height: 7),
+                            // CustomText(
+                            //   text: "Ticket id: ${notification.ticketId}",
+                            //   fontSize: 14,
+                            //   fontWeight: FontWeight.w400,
+                            //   color: AppColor.textColor000000,
+                            // ),
                             const SizedBox(height: 7),
                             CustomText(
-                              text: "Ticket id: ${notification.ticketId}",
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                              color: AppColor.textColor000000,
-                            ),
-                            const SizedBox(height: 7),
-                            CustomText(
-                              text: "Ticket id: ${notification.message}",
+                              text: "Message: ${notification.message}",
                               fontSize: 14,
                               fontWeight: FontWeight.w400,
                               color: AppColor.textColor000000,

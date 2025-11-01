@@ -19,5 +19,6 @@ class ApiEndPoints {
   static const String getNotificationDetails ="techniciancustomer_notification.php";
   static const String getEmployeeByUniqueId ="get_employee.php";
   static const String getScheduledJobsByTechnician = 'scheduled_jobs.php';
+     static const String userProducts ="get_user_allproducts.php";
 
 }
